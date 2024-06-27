@@ -52,3 +52,4 @@ rsconnect/
 
 # Project files in Posit that git should ignore
 project.Rproj
+xxx_HabFrag.qmd  # this was original file later broken to modules

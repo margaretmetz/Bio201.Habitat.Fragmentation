@@ -5,9 +5,6 @@ format: html
 editor: visual
 ---
 
-
-
-
 ## My name (replace me)
 
 ## Date (replace me)
@@ -45,6 +42,14 @@ Data creation before class as homework, and then uploaded last minute here befor
 As a class, you have collected some data on diversity for islands of different sizes and distances from the mainland. Those data are here in this project workspace, saved as comma-separated text, and called Class.Island.Biogeo.data.csv. Let's take a look!
 
 ```{r}
+# We are working with a few different packages in R that may need to be installed.  Please run this next line of code to have R install everything it needs...
+install.packages(c("tidyverse", "rmarkdown"))
+library(tidyverse)
+
+  # this (above) isn't really working properly
+
+
+
 # read in the data and name it "islands"
 islands=read.csv("Class.Island.Biogeo.data.csv")
 # let's take a look

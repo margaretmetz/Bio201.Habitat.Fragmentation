@@ -1,0 +1,232 @@
+---
+title: "Species Diversity and Habitat Fragmentation Analyses"
+author: "Margaret Metz & Greta Binford"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+## My name (replace me)
+
+## Date (replace me)
+
+# Assignment Overview
+
+**Purpose:** Human land use has broken up natural areas into smaller fragments of various sizes.  The niche requirements of some organisms may require continuous habitat over a given size for that organism to live in a patch of habitat.  In this series of assignments, we will use data from naturally and experimentally fragmented forests to understand the relationships between species diversity and habitat area. This knowledge can be applied to the increasingly pressing problem of habitat fragmentation as a major cause of species extinctions.
+
+This assignment will also familiarize you with some of the analytical tools necessary to graph and analyze biological data. The open source statistical programming language R is widely used in ecology and many other fields.  Learning to code in R or any other coding language is a desirable skill for numerous careers, and familiarity with one language, such as R, makes it easier to learn other coding languages too.  In the Biology department, R is being taught in the introductory sequence and in an increasing number of upper division classes. \]You will build on these R skills throughout your time at Lewis & Clark.
+
+**Tasks:**
+
+1.  **R Refresher** - Please refresh your R skills before class on **xxx-date-xxx** using the **xxx tutorials** available here... **(where? - link directly??)**
+2.  **Island Biogeography Primer** - readings... group discussion of theory... etc.
+3.  **Island Biogeography Simulation** - as a class we will collect some simulated data to help us explore the theory of Island Biogeography... (homework before this code along class...)
+4.  Complete **two data analysis case studies** to examine whether real ecological data support the Theory of Island Biogeography
+    -   (????Please read chapters 8 & 9 from Elizabeth Kolbert’s *6th Extinction* in preparation for our assignment?)
+
+**Criteria:** R has a steep learning curve.  Whether you are an expert or a novice, you should expect coding to involve lots of trial and error and trying again. We will do some of this coding together in a "code-a-long" and you will see this practice of trial and error! Success on this assignment requires thoughtful engagement with the tutorials as you work to complete them. Simply copying and pasting the commands will not help you learn to use R, even if the copied commands give you the “right” answer.  Please approach the tutorials with a willingness to try and try again, with all the humor and humility required to do so.  This is how you successfully learn. At the end, you will turn in your graphs and a few explanatory sentences.
+
+# Island Biogeography Primer
+
+at the beginning of class...
+
+Handout with blank graphs from MacArthur & Wilson's theory... fill in with extinction rates, immigration rates, island size... Where should there be the highest species richness?
+
+Blah blah blah... what should be included here vs on paper handout?
+
+### Island Biogeography Simulation
+
+.... Student data collection elsewhere... using simulator... imported here...
+
+Data creation before class as homework, and then uploaded last minute here before code-along day? **Or done at beginning of class? Can't remember...**
+
+As a class, you have collected some data on diversity for islands of different sizes and distances from the mainland. Those data are here in this project workspace, saved as comma-separated text, and called Class.Island.Biogeo.data.csv. Let's take a look!
+
+```{r}
+#install Tidyverse Package
+install.packages("tidyverse")
+library(tidyverse)
+
+# read in the data and name it "islands"
+islands=read.csv("Class.Island.Biogeo.data.csv")
+# let's take a look
+View(islands)
+
+```
+
+When you changed the *size* of the islands in the simulator, it seems to have affected the species richness. Let's take a look by learning how to plot those two pieces of information. Remember what you have learned about *independent* and *dependent variables*. Which one belongs on the x-axis and which on the y-axis?
+
+**-- do I need a ggplot refresher here or a way to remind them? – (add cheatsheet as file here?)**
+
+```{r}
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point()
+```
+
+Does it look like there is a relationship between diversity and size?
+
+Now let's look at island distance to the mainland:
+
+```{r}
+# can you make a similar graph to above, but this time about the relationship between Island Size and Species Diversity? 
+# remember to think about which variable is the independent predictor (x-axis) and which is the dependent variable (y-axis)
+
+
+```
+
+We can also make our graphs look a little nicer by adding better labels and playing with changing the colors or symbols.
+
+Here's an example
+
+```{r}
+
+# Let's go back to our graph of Island Size and Species Richess
+# Let's add labels, and let's get rid of that gray background with the stripes
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point()+
+  labs(title="Island Size Affects Species Diversity", x="Area of Island", y="Average Number of Species")+
+  theme_classic()
+```
+
+One of the things we might want to understand about these two variables is whether there is a relationship between them. In other words, does the value of one of these variables help predict the value of the other?
+
+The variables we have graphed above are both *continuous* variables. To understand the relationship between two continuous variables, we need to use an analysis called a linear regression. This will also give us a way to visualize the relationship on a graph like the one we just made.
+
+### Regression Analysis
+
+We can carry out a regression analysis to find the equation for the best-fit line through the points. The command: `model <- lm(islands$Avg.Num.Species~islands$Island.Size)` performs a regression of `Avg.Num.Species` (the y-variable) on `Island.Size` (the x-variable) and stores it in a variable called `model`. `lm` stands for ‘linear model.’
+
+It is important to notice that in this command, the dependent variable comes first and is separated from the predictors by a tilde (`~`) rather than a comma.
+
+Write the command to perform a linear regression of diversity on size for the i on length for `islands` data and store it in a variable called `size.model`.
+
+```{r}
+
+size.model <- lm(islands$Avg.Num.Species~islands$Island.Size)
+
+
+# the line th
+```
+
+You can use `geom_abline()` to add a line to your graph that describes the relationship between these two variables:
+
+```{r}
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point()+
+  labs(title="Island Size Affects Species Diversity", x="Area of Island", y="Average Number of Species")+
+  theme_classic()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+You can find the slope of the line and the y-intercept (the values m and b in the equation y = mx + b) by typing the name of the variable you created from your regression.
+
+Write the code to find the slope and y-intercept of the best-fit line.
+
+Run Code
+
+12 #Type your code here
+
+Hint You named your regression variable weightreg The output shows the values of the line’s y-intercept (-5.1502) and its slope (0.8149).
+
+Is it statistically significant? The points fit the line quite well. It seems unlikely that this association could have happened just by accident, though it IS possible. We would like to know the probability that there is actually no relationship between these two variables, that the slope of the true line through them is actually zero (a flat line).
+
+We can find the p-value by using the command summary(model).
+
+Write the command to find the probability that the true slope of the line is zero. Don’t forget to use the name you gave your model variable.
+
+Run Code
+
+12 #Type your code here
+
+Hint In the ‘coefficients’ table, the line for sampledata\$length shows a p-value, 4.7 x 10\^-8, that is much smaller than 0.05. This means that you can conclude that the effect of length on weight in this sample is highly statistically significant.
+
+\
+
+# Do real ecological data support the Theory of Island Biogeography?
+
+## Case Study 1: Plant Species in Natural Forest Fragments
+
+Let’s look at some data from the Yucatan peninsula in Mexico. These data come from a study by Miguel A. Munguía-Rosas and Salvador Montiel, published in 2014 in PLoS One, “Patch Size and Isolation Predict Plant Species Density in a Naturally Fragmented Forest.” In this study area, there are patches of forest that form natural islands against a background of other habitat. The "islands" are on a distinct soil type, fed by springs of water, and at a slightly different elevation than the surrounding habitat.
+
+The data from this study have already been uploaded to this R environment, but we need to read them in, assign them a name, and look at them. Try that using the code below.
+
+```{r}
+
+# let's call these data "plants"
+plants=read.csv("plant_patches.csv", as.is=T)
+
+# take a look... 
+View(plants)
+```
+
+They quantified species present in habitat patches of differing sizes and differing distances to the nearest other patch of forest. Here are the variables you can see in the dataset:
+
+-   Patch - the number of the study patch (used to identify unique study patches)
+-   S - the number of **species** in that patch
+-   size - the area of the patch in ([UNITS?]{.underline})
+-   perimeter - the distance around the perimeter of each patch ([UNITS?)]{.underline}
+-   altitude - elevation of each patch ([UNITS?]{.underline})
+-   nearest - the distance from this patch to its nearest neighbor patch ([UNITS?]{.underline})
+
+I like to look at the data in a few different ways to ensure it has loaded correctly. This is a good habit to develop for when you start working with your own data, and inevitably you will find some typos or strange things that you want to correct before analysis. Here are some useful commands:
+
+```{r}
+# the str() command shows you the structure of the data... what type of variable each column is, how many observations, etc.
+str(plants)
+
+# head() shows you the first six lines of data.  This is useful because your datasets may be large and overwhelming and you just want to do a quick check
+head(plants)
+
+# tail() is similar, but it shows you the last six lines.  Try that on your own:
+
+
+```
+
+### Hypotheses and Predictions
+
+Before you start analyzing data, it is important to know what your hypotheses are and how these data might help you examine them. Based on the Theory of Island Biogeography, which of the above variables do you think might be helpful to understand whether the data from this study supports the Theory of Island Biogeography?
+
+1.  [ ] *Discuss with your group and then choose at least two variables you will exam.*
+
+2.  [ ] *Write the variable below and your prediction for how it might relate to the number of species in a patch.*
+
+| Predictor variable | Type your prediction here |
+|--------------------|---------------------------|
+|                    |                           |
+|                    |                           |
+|                    |                           |
+
+### Data Analysis 1
+
+A reasonable place to start our analyses is to ask whether larger patches have more species of plants. Let's take a look:
+
+```{r}
+# first we need to install ggplot2, the package you've been learning to use!
+
+install.packages("ggplot2") ; library(ggplot2)
+
+
+# next let's try a scatter plot that looks at how species number varies with patch size
+ggplot(data=plants, mapping=aes(x=size, y=S)) +
+  geom_point()
+```
