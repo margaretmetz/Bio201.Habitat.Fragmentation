@@ -1,0 +1,77 @@
+---
+title: "Species Diversity and Habitat Fragmentation Analyses"
+author: "Margaret Metz & Greta Binford"
+format: html
+editor: visual
+---
+
+## My name (replace me)
+
+## Date (replace me)
+
+# Do real ecological data support the Theory of Island Biogeography?
+
+## Case Study 2: Examining the effects of habitat fragmentation
+
+When natural habitats are converted to other uses, “islands” of habitat remain against a background of agriculture or development.  Effectively, we convert a large “mainland” of habitat to a smaller island of habitat. 
+
+**some way to answer a question here...**
+
+●      What does the theory of island biogeography predict should happen to species number in these fragments?  Which part of the theory is most responsible for leading to this change?
+
+In your readings, you learned about a large-scale experiment that artificially created habitat fragments in the Brazilian Amazon. Kolbert, in part of Chapter 9 of her book *The Sixth Extinction*, described how ecologists marked birds for survey and re-capture to understand which species were in which fragment and how this changed over time.  Page 1163 describes data from the same experiment in Brazil.  Now you will take some of the real data from the forest fragment experiment and analyze it in R to understand the effect of fragmentation.
+
+The data are already loaded here in a file called “fragments.csv" but we need to read these data into our workspace
+
+```{r}
+fragments=read.csv("fragments.csv", header=T)
+
+View(fragments)
+```
+
+This dataset contains information on different patches in the experiment, the size of the patch (Area), the year the patch became isolated (Isolation), the starting number of bird species (S) and the best estimated time until 50% of bird species were lost from the patch (t50).
+
+**some way to instruct them to brainstorm here.**
+
+●What sort of graph or analysis should we do to test the ideas you listed above? 
+
+● Draw some ideas here
+
+Both the dependent and independent variable need log-transformation in this case.  **add clues for doing this in ggplot**
+
+●      Use what you’ve learned in R so far to analyze this new dataset.
+
+●      Save and export your final graph.
+
+●      Discuss with your groupmates what you learn from these most recent data.
+
+●      Then, write a paragraph in your own words about what these data tell us about the effects of habitat fragmentation.
+
+```{r}
+# answer will be something like... 
+
+ggplot(data=fragments, mapping=aes(x=Area, y=S)) +
+  geom_point() + 
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method="lm", se=F)
+
+```
+
+```{r}
+# write the code to conduct the regression analysis.  remember about the log10() function
+
+frag.model=lm(log10(S) ~ log10(Area), data=fragments)
+summary(frag.model)
+
+```
+
+You do that by expressing log=”xy” when you make your graph, and by using the log10() transformation in your regression analysis, as above.
+
+●      Use what you’ve learned in R so far to analyze this new dataset.
+
+●      Save and export your final graph.
+
+●      Discuss with your groupmates what you learn from these most recent data.
+
+●      Then, write a paragraph in your own words about what these data tell us about the effects of habitat fragmentation.

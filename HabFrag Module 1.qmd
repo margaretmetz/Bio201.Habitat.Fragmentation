@@ -1,0 +1,149 @@
+---
+title: "Species Diversity and Habitat Fragmentation Analyses"
+author: "Margaret Metz & Greta Binford"
+format: html
+editor: visual
+---
+
+
+
+
+## My name (replace me)
+
+## Date (replace me)
+
+# Habitat Fragmentation - Assignment Overview
+
+**Purpose:** Human land use has broken up natural areas into smaller fragments of various sizes.  The niche requirements of some organisms may require continuous habitat over a given size for that organism to live in a patch of habitat.  In this series of assignments, we will use data from naturally and experimentally fragmented forests to understand the relationships between species diversity and habitat area. This knowledge can be applied to the increasingly pressing problem of habitat fragmentation as a major cause of species extinctions.
+
+This assignment will also familiarize you with some of the analytical tools necessary to graph and analyze biological data. The open source statistical programming language R is widely used in ecology and many other fields.  Learning to code in R or any other coding language is a desirable skill for numerous careers, and familiarity with one language, such as R, makes it easier to learn other coding languages too.  In the Biology department, R is being taught in the introductory sequence and in an increasing number of upper division classes. \]You will build on these R skills throughout your time at Lewis & Clark.
+
+**Tasks:**
+
+1.  **R Refresher** - Please refresh your R skills before class on **xxx-date-xxx** using the **xxx tutorials** available here... **(where? - link directly??)**
+2.  **Island Biogeography Primer** - readings... group discussion of theory... etc.
+3.  **Island Biogeography Simulation** - as a class we will collect some simulated data to help us explore the theory of Island Biogeography... (homework before this code along class...)
+4.  Complete **two data analysis case studies** to examine whether real ecological data support the Theory of Island Biogeography
+    -   (????Please read chapters 8 & 9 from Elizabeth Kolbert’s *6th Extinction* in preparation for our assignment?)
+
+**Criteria:** R has a steep learning curve.  Whether you are an expert or a novice, you should expect coding to involve lots of trial and error and trying again. We will do some of this coding together in a "code-a-long" and you will see this practice of trial and error! Success on this assignment requires thoughtful engagement with the tutorials as you work to complete them. Simply copying and pasting the commands will not help you learn to use R, even if the copied commands give you the “right” answer.  Please approach the tutorials with a willingness to try and try again, with all the humor and humility required to do so.  This is how you successfully learn. At the end, you will turn in your graphs and a few explanatory sentences.
+
+# Island Biogeography Primer
+
+at the beginning of class...
+
+Handout with blank graphs from MacArthur & Wilson's theory... fill in with extinction rates, immigration rates, island size... Where should there be the highest species richness?
+
+Blah blah blah... what should be included here vs on paper handout?
+
+### Island Biogeography Simulation
+
+.... Student data collection elsewhere... using simulator... imported here...
+
+Data creation before class as homework, and then uploaded last minute here before code-along day? **Or done at beginning of class? Can't remember...**
+
+As a class, you have collected some data on diversity for islands of different sizes and distances from the mainland. Those data are here in this project workspace, saved as comma-separated text, and called Class.Island.Biogeo.data.csv. Let's take a look!
+
+```{r}
+# read in the data and name it "islands"
+islands=read.csv("Class.Island.Biogeo.data.csv")
+# let's take a look
+View(islands)
+
+```
+
+When you changed the *size* of the islands in the simulator, it seems to have affected the species richness. Let's take a look by learning how to plot those two pieces of information. Remember what you have learned about *independent* and *dependent variables*. Which one belongs on the x-axis and which on the y-axis?
+
+**-- do I need a ggplot refresher here or a way to remind them? – (add cheatsheet as file here?)**
+
+```{r}
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point()
+```
+
+Does it look like there is a relationship between diversity and size?
+
+Now let's look at island distance to the mainland:
+
+```{r}
+# can you make a similar graph to above, but this time about the relationship between Island Size and Species Diversity? 
+# remember to think about which variable is the independent predictor (x-axis) and which is the dependent variable (y-axis)
+
+
+```
+
+We can also make our graphs look a little nicer by adding better labels and playing with changing the colors or symbols.
+
+Here's an example
+
+```{r}
+
+# Let's go back to our graph of Island Size and Species Richess
+# Let's add labels, and let's get rid of that gray background with the stripes
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point()+
+  labs(title="Island Size Affects Species Diversity", x="Area of Island", y="Average Number of Species")+
+  theme_classic()
+```
+
+One of the things we might want to understand about these two variables is whether there is a relationship between them. In other words, does the value of one of these variables help predict the value of the other?
+
+The variables we have graphed above are both *continuous* variables. You notice that there is a lot of variability, but there seems to be a positive relationshipe between the two variables: larger islands seem to support more species. To visualize this more clearly, we can add something called a "line of best fit," which attempts to draw the line describing the relationship betweent he two points while minimizing the scatter around the line.
+
+In ggplot we can add a line of best fit, almost by magic! Let's use the geom_smooth() command to add the line to our existing plot.
+
+```{r}
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point() +
+  labs(title="Island Size Affects Species Diversity", x="Area of Island", y="Average Number of Species") +
+  theme_classic() + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+# Regression Analysis
+
+What exactly IS ggplot doing to add this line? To understand the relationship between two continuous variables, we need to use a statistical analysis called a linear regression. The part of the code above that says `method='lm'` is saying to use a linear model (this is what `lm` stands for). In the background of the command to add this line o fbest fit, R is conducting a linear regression, but we can also do that on our own as part of our data analysis.
+
+Let's look at how the regression will give us the information we need to create a line of best fit. Like all lines, it has a slope and an intercept. Remember that old equation y = mx + b? b is the intercept and m is the slope. x and y are our familiar independent and dependent variables.
+
+The command: `model <- lm(islands$Avg.Num.Species~islands$Island.Size)` performs a regression of `Avg.Num.Species` (the y-variable) on `Island.Size` (the x-variable) and stores it in a variable called `model`. Remember, `lm` stands for ‘linear model.’
+
+It is important to notice that in this command, the dependent variable comes first and is separated from the predictors by a tilde (`~`) rather than a comma.
+
+Write the command to perform a linear regression of diversity on size for the i on length for `islands` data and store it in a variable called `size.model`.
+
+```{r}
+
+size.model <- lm(islands$Avg.Num.Species~islands$Island.Size)
+
+```
+
+You can find the slope of the line and the y-intercept (the values m and b in the equation y = mx + b) by typing the name of the variable you created from your regression.
+
+```{r}
+# type the model name here
+size.model
+```
+
+Does this line represent an important association between the two variables? In other words, is it statistically significant? There is a lot of variation around the line, but this could have happened just by change.
+
+We would like to know the probability that there is actually no relationship between these two variables, that the slope of the true line through them is actually zero (a flat line). We can find the p-value by using the command `summary(model)`.
+
+Write the command to find the probability that the true slope of the line is zero. Don’t forget to use the name you gave your model variable.
+
+```{r}
+summary(size.model)
+```
+
+Another way to add the line of best fit is to use a command called `geom_abline()` which creates a line given two variables, slope and intercept. Now that we know what those are from our regression, we could also draw the line that way.
+
+```{r}
+ggplot(data=islands, mapping=aes(x=Island.Size, y=Avg.Num.Species)) +
+  geom_point() +
+  labs(title="Island Size Affects Species Diversity", x="Area of Island", y="Average Number of Species") +
+  theme_classic() + 
+  geom_abline(slope=0.01818, intercept=2.03185)
+
+```
+
+**-- insert stuff about interpreting this output here...**\

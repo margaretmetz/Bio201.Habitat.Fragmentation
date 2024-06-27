@@ -1,0 +1,141 @@
+---
+title: "Species Diversity and Habitat Fragmentation Analyses"
+author: "Margaret Metz & Greta Binford"
+format: html
+editor: visual
+---
+
+## My name (replace me)
+
+## Date (replace me)
+
+# Do real ecological data support the Theory of Island Biogeography?
+
+## Case Study 1: Plant Species in Natural Forest Fragments
+
+Let’s look at some data from the Yucatan peninsula in Mexico. These data come from a study by Miguel A. Munguía-Rosas and Salvador Montiel, published in 2014 in PLoS One, “Patch Size and Isolation Predict Plant Species Density in a Naturally Fragmented Forest.” In this study area, there are patches of forest that form natural islands against a background of other habitat. The "islands" are on a distinct soil type, fed by springs of water, and at a slightly different elevation than the surrounding habitat.
+
+The data from this study have already been uploaded to this R environment, but we need to read them in, assign them a name, and look at them. Try that using the code below.
+
+```{r}
+
+# let's call these data "plants"
+plants=read.csv("plant_patches.csv", as.is=T)
+
+# take a look... 
+View(plants)
+```
+
+They quantified species present in habitat patches of differing sizes and differing distances to the nearest other patch of forest. Here are the variables you can see in the dataset:
+
+-   Patch - the number of the study patch (used to identify unique study patches)
+-   S - the number of **species** in that patch
+-   size - the area of the patch in ([UNITS?]{.underline})
+-   perimeter - the distance around the perimeter of each patch ([UNITS?)]{.underline}
+-   altitude - elevation of each patch ([UNITS?]{.underline})
+-   nearest - the distance from this patch to its nearest neighbor patch ([UNITS?]{.underline})
+
+I like to look at the data in a few different ways to ensure it has loaded correctly. This is a good habit to develop for when you start working with your own data, and inevitably you will find some typos or strange things that you want to correct before analysis. Here are some useful commands:
+
+```{r}
+# the str() command shows you the structure of the data... what type of variable each column is, how many observations, etc.
+str(plants)
+
+# head() shows you the first six lines of data.  This is useful because your datasets may be large and overwhelming and you just want to do a quick check
+head(plants)
+
+# tail() is similar, but it shows you the last six lines.  Try that on your own:
+
+
+```
+
+### Hypotheses and Predictions
+
+Before you start analyzing data, it is important to know what your hypotheses are and how these data might help you examine them. Based on the Theory of Island Biogeography, which of the above variables do you think might be helpful to understand whether the data from this study supports the Theory of Island Biogeography?
+
+1.  [ ] *Discuss with your group and then choose at least two variables you will exam.*
+
+2.  [ ] *Write the variable below and your prediction for how it might relate to the number of species in a patch.*
+
+| Predictor variable | Type your prediction here |
+|--------------------|---------------------------|
+|                    |                           |
+|                    |                           |
+|                    |                           |
+
+### Data Analysis 1
+
+A reasonable place to start our analyses is to ask whether larger patches have more species of plants. Let's take a look:
+
+```{r}
+# first we need to install ggplot2, the package you've been learning to use!
+
+# install.packages("ggplot2") ; library(ggplot2)
+
+
+# next let's try a scatter plot that looks at how species number varies with patch size
+ggplot(data=plants, mapping=aes(x=size, y=S)) +
+  geom_point()
+```
+
+Habitat area often has a distribution that works better when it has been log-transformed. This works well when there are a lot of smaller values and a few larger values of area.
+
+```{r}
+ggplot(data=plants, mapping=aes(x=size, y=S)) + 
+  geom_point() +
+  scale_x_log10() +
+  labs(x="Patch Area (log-transformed)", y="Species Number")
+```
+
+Now let's do a linear regression so we can understand whether there is a relationship between these two variables using the command `lm()`. Remember that the form of the regression is dependent.variable \~ independent.variable.  In this case, patch size is the independent variable and we can take the log of that value before putting it in the model by writing `log10(size)`. We save the results of this regression as an object we are calling `model1`. 
+
+```{r}
+model1 = lm(S~ log10(size), data=plants )
+
+# print the coefficients that give the slope and intercept of the relationship
+model1
+
+# examine the statistical significance of the relationship
+summary(model1)
+```
+
+Now let's add the line of best fit to the graph using this relationship:
+
+```{r}
+ggplot(data=plants, mapping=aes(x=size, y=S)) + 
+  geom_point() +
+  scale_x_log10() +
+  labs(x="Patch Area (log-transformed)", y="Species Number") +
+  geom_abline(slope=2.590, intercept=10.501)
+
+# or alternatively:
+ggplot(data=plants, mapping=aes(x=size, y=S)) + 
+  geom_point() +
+  scale_x_log10() +
+  labs(x="Patch Area (log-transformed)", y="Species Number") +
+  geom_smooth(method="lm", se=F)
+
+
+```
+
+**something here about updating this graph or saving it.**
+
+### Data Analysis 2
+
+Now - your challenge is to conduct a similar analysis using the predictor variable of distance to the nearest patch. Neighboring patches would act as a "source" (similar to the mainland) for new species that might colonize any particular patch of forest.
+
+```{r}
+# write your code here to visualize the data, conduct a regression analysis, and add the line of best fit.
+
+
+```
+
+Some version for these instructions:
+
+Now, your challenge is to repeat this analysis with the data on distance to the nearest patch. 
+
+●      Similarly create and interpret a graph, discuss with your group mates, and export the graph so that you can insert it into your same document.
+
+●      For Homework, please write a short paragraph to explain whether your data support the theory of island biogeography.  In class, carry on with the next analysis.
+
+**Something to end this document and move to the next module.**
